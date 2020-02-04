@@ -61,8 +61,14 @@
     
     <script src="js/app/models/Negociacao.js"></script>
     <script>
-        var n1 = new Negociacao(new Date(), 5, 700);
+        var hoje = new Date();
+        console.log("Hoje - Antes: " + hoje);
+
+        var n1 = new Negociacao(hoje, 5, 700);
         console.log(n1);
+
+        hoje.setDate(hoje.getDate() + 1);
+        console.log("Hoje - Depois: " + hoje);
         
         console.log("Data: " + n1.data);
         console.log("Quantidade: " + n1.quantidade);
