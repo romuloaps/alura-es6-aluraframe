@@ -8,7 +8,7 @@ class Dates {
     }
     
     static parse(dateAsString) {
-        if (!/\d{4}-\d{2}-\d{2}/.test(dateAsString)) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateAsString)) {
             throw new Error("A data informada deve estar no formato aaaa-mm-dd");
         }
 
