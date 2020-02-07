@@ -23,4 +23,8 @@ class Negociacao {
     get valor() {
         return this._valor;
     }
+
+    getDataFormatada() {
+       return new Dates().format(this._data);
+    }
 }
