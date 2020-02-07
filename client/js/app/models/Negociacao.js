@@ -25,6 +25,6 @@ class Negociacao {
     }
 
     getDataFormatada() {
-       return new Dates().format(this._data);
+       return Dates.format(this._data);
     }
 }

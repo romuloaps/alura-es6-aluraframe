@@ -11,7 +11,7 @@ class NegociacaoController {
         event.preventDefault();
 
         let negociacao = new Negociacao(
-            new Dates().parse(this._inputData.value),
+            Dates.parse(this._inputData.value),
             this._inputQuantidade.value,
             this._inputValor.value
         );
