@@ -6,7 +6,7 @@ class NegociacoesView extends View {
 
     template(model) {
         return `
-            <table class="table table-hover table-bordered">
+            <table class="table table-hover table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>DATA</th>
