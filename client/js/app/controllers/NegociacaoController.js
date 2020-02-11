@@ -1,13 +1,30 @@
 class NegociacaoController {
 
     constructor() {
+        let self = this;
         let $ = document.querySelector.bind(document);
+        
         this._inputData = $("#data");
         this._inputQuantidade = $("#quantidade");
         this._inputValor = $("#valor");
-        this._negociacoes = new Negociacoes(model => this._negociacoesView.update(model));
         this._negociacoesView = new NegociacoesView($("#negociacoes-view"));
         this._mensagemView = new MensagemView($("#mensagem-view"));
+        
+        this._negociacoes = new Proxy(new Negociacoes(), {
+            get: function(target, prop, receiver) {
+                const metodosParaInterceptar = ["adiciona", "esvazia"];
+                
+                if (metodosParaInterceptar.includes(prop) && typeof(target[prop]) == typeof(Function)) {
+                    return function() {
+                        console.log(`Interceptando ${prop}`);
+                        Reflect.apply(target[prop], target, arguments);
+                        self._negociacoesView.update(target);
+                    }
+                }
+
+                return Reflect.get(target, prop, receiver);
+            }
+        });
         
         this._negociacoesView.update(this._negociacoes);
     }
