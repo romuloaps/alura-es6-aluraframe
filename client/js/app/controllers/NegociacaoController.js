@@ -11,7 +11,7 @@ class NegociacaoController {
         this._mensagemView = new MensagemView($("#mensagem-view"));
         
         this._negociacoes = new Proxy(new Negociacoes(), {
-            get: function(target, prop, receiver) {
+            get(target, prop, receiver) {
                 const metodosParaInterceptar = ["adiciona", "esvazia"];
                 
                 if (metodosParaInterceptar.includes(prop) && typeof(target[prop]) == typeof(Function)) {
