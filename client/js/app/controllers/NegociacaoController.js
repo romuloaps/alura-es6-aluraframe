@@ -1,7 +1,6 @@
 class NegociacaoController {
 
     constructor() {
-        let self = this;
         let $ = document.querySelector.bind(document);
         
         this._inputData = $("#data");
@@ -10,23 +9,7 @@ class NegociacaoController {
         this._negociacoesView = new NegociacoesView($("#negociacoes-view"));
         this._mensagemView = new MensagemView($("#mensagem-view"));
         
-        this._negociacoes = new Proxy(new Negociacoes(), {
-            get(target, prop, receiver) {
-                const metodosParaInterceptar = ["adiciona", "esvazia"];
-                
-                if (metodosParaInterceptar.includes(prop) && typeof(target[prop]) == typeof(Function)) {
-                    return function() {
-                        console.log(`Interceptando ${prop}`);
-                        Reflect.apply(target[prop], target, arguments);
-                        self._negociacoesView.update(target);
-                    }
-                }
-
-                return Reflect.get(target, prop, receiver);
-            }
-        });
-        
-        this._negociacoesView.update(this._negociacoes);
+        this._negociacoes = new Bind(new Negociacoes(), model => this._negociacoesView.update(model), "adiciona", "esvazia");
     }
 
     adiciona(event) {
