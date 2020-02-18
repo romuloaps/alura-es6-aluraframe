@@ -21,6 +21,29 @@ class NegociacaoController {
         this._limpeFormulario();
     }
 
+    importa() {
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "negociacoes/semana");
+        xhr.onreadystatechange = () => {
+            
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let listaDeNegociacoes = JSON.parse(xhr.responseText);
+
+                listaDeNegociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor))
+                                .forEach(negociacao => this._negociacoes.adiciona(negociacao));
+
+                this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
+
+            } else {
+                console.log(xhr.responseText);
+                this._mensagemView.update(Mensagens.erro("Não foi possível importar as negociações."));
+            }
+        };
+
+        xhr.send();
+    }
+
     apaga() {
         this._negociacoes.esvazia();
         this._mensagemView.update(Mensagens.sucesso("Negociações apagadas com sucesso!"));
