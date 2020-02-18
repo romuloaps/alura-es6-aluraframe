@@ -8,6 +8,7 @@ class NegociacaoController {
         this._inputValor = $("#valor");
         this._negociacoesView = new NegociacoesView($("#negociacoes-view"));
         this._mensagemView = new MensagemView($("#mensagem-view"));
+        this._negociacaoService = new NegociacaoService();
         
         this._negociacoes = new Bind(new Negociacoes(), model => this._negociacoesView.update(model), "adiciona", "esvazia");
     }
@@ -22,26 +23,11 @@ class NegociacaoController {
     }
 
     importa() {
-        let xhr = new XMLHttpRequest();
-
-        xhr.open("GET", "negociacoes/semana");
-        xhr.onreadystatechange = () => {
-            
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                let listaDeNegociacoes = JSON.parse(xhr.responseText);
-
-                listaDeNegociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor))
-                                .forEach(negociacao => this._negociacoes.adiciona(negociacao));
-
-                this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
-
-            } else {
-                console.log(xhr.responseText);
-                this._mensagemView.update(Mensagens.erro("Não foi possível importar as negociações."));
-            }
-        };
-
-        xhr.send();
+        this._negociacaoService.getNegociacoesDaSemana(negociacoes => {
+                                    negociacoes.forEach(n => this._negociacoes.adiciona(n));
+                                    this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
+                                },
+                                erro => this._mensagemView.update(Mensagens.erro("Não foi possível importar as negociações.")));
     }
 
     apaga() {
