@@ -11,6 +11,10 @@ class Negociacoes {
         this._negociacoes.push(negociacao);
     }
 
+    esvazia() {
+        this._negociacoes = [];
+    }
+
     get negociacoes() {
         return this._negociacoes.slice();
     }
