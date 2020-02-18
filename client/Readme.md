@@ -1,4 +1,4 @@
 Sistema Alura Frame
 Controle de Negociações
 
-Versão atual: 1.0.0
+Versão atual: 1.1.0
