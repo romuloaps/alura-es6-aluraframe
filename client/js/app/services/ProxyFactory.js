@@ -8,12 +8,23 @@ class ProxyFactory {
                 if (metodosParaInterceptar.includes(prop) && ProxyFactory._isFuncao(target[prop])) {
                     return function() {
                         console.log(`Interceptando ${prop}`);
-                        Reflect.apply(target[prop], target, arguments);
-                        return intercept(target);
+                        let retorno = Reflect.apply(target[prop], target, arguments);
+                        intercept(target);
+
+                        return retorno;
                     }
                 }
 
                 return Reflect.get(target, prop, receiver);
+            },
+
+            set(target, prop, value, receiver) {
+
+                let retorno = Reflect.set(target, prop, value, receiver);
+                if(props.includes(prop)) {
+                    intercept(target);    
+                }
+                return retorno;
             }
         });
     }
