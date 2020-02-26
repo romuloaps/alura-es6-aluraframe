@@ -10,7 +10,8 @@ class NegociacaoController {
         this._mensagemView = new MensagemView($("#mensagem-view"));
         this._negociacaoService = new NegociacaoService();
         
-        this._negociacoes = new Bind(new Negociacoes(), model => this._negociacoesView.update(model), "adiciona", "esvazia");
+        this._negociacoes = new Bind(new Negociacoes(), model => this._negociacoesView.update(model), "adiciona", "esvazia", "ordena");
+        this._ordemAtual;
     }
 
     adiciona(event) {
@@ -34,6 +35,11 @@ class NegociacaoController {
     apaga() {
         this._negociacoes.esvazia();
         this._mensagemView.update(Mensagens.sucesso("Negociações apagadas com sucesso!"));
+    }
+
+    ordena(coluna) {
+        this._negociacoes.ordena((a, b) => a[coluna] - b[coluna], this._ordemAtual == coluna);
+        this._ordemAtual = coluna;
     }
 
     _crieNegociacao() {
