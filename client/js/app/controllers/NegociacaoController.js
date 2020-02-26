@@ -23,11 +23,19 @@ class NegociacaoController {
     }
 
     importa() {
-        this._negociacaoService.getNegociacoesDaSemana(negociacoes => {
-                                    negociacoes.forEach(n => this._negociacoes.adiciona(n));
-                                    this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
-                                },
-                                erro => this._mensagemView.update(Mensagens.erro("Não foi possível importar as negociações.")));
+        
+        Promise.all([
+            this._negociacaoService.getNegociacoesDaSemana(),
+            this._negociacaoService.getNegociacoesDaSemanaAnterior(),
+            this._negociacaoService.getNegociacoesDaSemanaRetrasada()
+        ])
+        .then(negociacoes => {
+            negociacoes
+                .reduce((listaGeral, listaAtual) => listaGeral.concat(listaAtual), [])
+                .forEach(n => this._negociacoes.adiciona(n));
+            this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
+        })
+        .catch(erro => this._mensagemView.update(Mensagens.erro(erro)));
     }
 
     apaga() {

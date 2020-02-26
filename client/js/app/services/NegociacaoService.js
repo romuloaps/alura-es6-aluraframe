@@ -1,22 +1,37 @@
 class NegociacaoService {
 
-    getNegociacoesDaSemana(onSuccess, onError) {
-        let xhr = new XMLHttpRequest();
+    getNegociacoesDaSemana() {
+        return this._fetchNegociacoes("semana", "Erro ao obter negociações da semana");
+    }
 
-        xhr.open("GET", "negociacoes/semana");
-        xhr.onreadystatechange = () => {
-            
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                let listaDeNegociacoes = JSON.parse(xhr.responseText);
+    getNegociacoesDaSemanaAnterior() {
+        return this._fetchNegociacoes("anterior", "Erro ao obter negociações da semana anterior");
+    }
 
-                onSuccess(listaDeNegociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor)));
+    getNegociacoesDaSemanaRetrasada() {
+        return this._fetchNegociacoes("retrasada", "Erro ao obter negociações da semana retrasada");
+    }
 
-            } else {
-                console.log(xhr.responseText);
-                onError(xhr.responseText);
-            }
-        };
+    _fetchNegociacoes(endpoint, errorMessage) {
+        return new Promise((resolve, reject) => {
 
-        xhr.send();
+            let xhr = new XMLHttpRequest();
+    
+            xhr.open("GET", `negociacoes/${endpoint}`);
+            xhr.onreadystatechange = () => {
+
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status == 200) {
+                        resolve(JSON.parse(xhr.responseText).map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor)));
+    
+                    } else {
+                        reject(xhr.responseText);
+                    }
+                }
+            };
+    
+            xhr.send();
+        });
     }
 }
