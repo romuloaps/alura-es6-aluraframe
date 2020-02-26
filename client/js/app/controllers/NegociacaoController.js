@@ -23,19 +23,12 @@ class NegociacaoController {
     }
 
     importa() {
-        
-        Promise.all([
-            this._negociacaoService.getNegociacoesDaSemana(),
-            this._negociacaoService.getNegociacoesDaSemanaAnterior(),
-            this._negociacaoService.getNegociacoesDaSemanaRetrasada()
-        ])
-        .then(negociacoes => {
-            negociacoes
-                .reduce((listaGeral, listaAtual) => listaGeral.concat(listaAtual), [])
-                .forEach(n => this._negociacoes.adiciona(n));
-            this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
-        })
-        .catch(erro => this._mensagemView.update(Mensagens.erro(erro)));
+        this._negociacaoService.getAll()
+                                .then(negociacoes => {
+                                    negociacoes.forEach(n => this._negociacoes.adiciona(n));
+                                    this._mensagemView.update(Mensagens.sucesso("Negociações importadas com sucesso!"));
+                                })
+                                .catch(erro => this._mensagemView.update(Mensagens.erro(erro)));
     }
 
     apaga() {
