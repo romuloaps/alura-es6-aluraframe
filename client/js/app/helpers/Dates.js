@@ -8,13 +8,14 @@ class Dates {
     }
     
     static parse(dateAsString) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateAsString)) {
-            throw new Error("A data informada deve estar no formato aaaa-mm-dd");
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateAsString)) {
+            throw new Error("A data informada deve estar no formato dd/MM/aaaa");
         }
 
-        return new Date(...dateAsString.split("-")
-                                             .map((item, index) => item - (index % 2))
-                );
+        return new Date(...dateAsString.split("/")
+                                        .reverse()
+                                        .map((item, index) => item - (index % 2))
+                                        );
     }
 
     static format(date) {
