@@ -18,4 +18,8 @@ class Negociacoes {
     get negociacoes() {
         return this._negociacoes.slice();
     }
+
+    get volumeTotal() {
+        return this._negociacoes.reduce((total, n) => total + n.volume, 0.0);
+    }
 }
