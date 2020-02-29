@@ -12,15 +12,27 @@ class NegociacaoController {
         
         this._negociacoes = new Bind(new Negociacoes(), model => this._negociacoesView.update(model), "adiciona", "esvazia", "ordena");
         this._ordemAtual;
+
+        this._carregaNegociacoes();
     }
 
     adiciona(event) {
         event.preventDefault();
 
-        this._negociacoes.adiciona(this._crieNegociacao());
-        this._mensagemView.update(Mensagens.sucesso("Negociação adicionada com sucesso!"));
+        ConnectionFactory.getConnection()
+                        .then(connection => {
+                            new NegociacaoIndexedDBDao(connection).adiciona(this._crieNegociacao())
+                                                                .then(() => {
+                                                                    this._negociacoes.adiciona(this._crieNegociacao());
+                                                                    this._mensagemView.update(Mensagens.sucesso("Negociação adicionada com sucesso!"));
+                                                            
+                                                                    this._limpeFormulario();
+                                                                })
+                                                                .catch(error => this._mensagemView.update(Mensagens.erro(error)));
+                        })
+                        .catch(error => this._mensagemView.update(Mensagens.erro(error)));
 
-        this._limpeFormulario();
+        
     }
 
     importa() {
@@ -33,8 +45,15 @@ class NegociacaoController {
     }
 
     apaga() {
-        this._negociacoes.esvazia();
-        this._mensagemView.update(Mensagens.sucesso("Negociações apagadas com sucesso!"));
+        ConnectionFactory.getConnection()
+                        .then(connection => new NegociacaoIndexedDBDao(connection))
+                        .then(dao => {
+                            dao.apagaTodos()
+                            this._negociacoes.esvazia();
+                            this._mensagemView.update(Mensagens.sucesso("Negociações apagadas com sucesso!"));
+                        })
+                        .catch(erro => this._mensagemView.update(Mensagens.erro(erro)));
+
     }
 
     ordena(coluna) {
@@ -45,8 +64,8 @@ class NegociacaoController {
     _crieNegociacao() {
         return new Negociacao(
             Dates.parse(this._inputData.value),
-            this._inputQuantidade.value,
-            this._inputValor.value
+            parseInt(this._inputQuantidade.value),
+            parseFloat(this._inputValor.value)
         );
     }
 
@@ -56,5 +75,12 @@ class NegociacaoController {
         this._inputValor.value = 0.0;
 
         this._inputData.focus();
+    }
+
+    _carregaNegociacoes() {
+        ConnectionFactory.getConnection()
+                        .then(connection => new NegociacaoIndexedDBDao(connection))
+                        .then(dao => dao.listaTodos())
+                        .then(negociacoes => negociacoes.forEach(n => this._negociacoes.adiciona(n)));
     }
 }
