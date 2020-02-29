@@ -26,6 +26,38 @@ class NegociacaoService {
         .catch(erro => {throw new Error(erro)});
     }
 
+    salva(negociacao) {
+        return ConnectionFactory.getConnection()
+                        .then(connection => new NegociacaoIndexedDBDao(connection))
+                        .then(dao => dao.adiciona(negociacao))
+                        .then(() => negociacao)
+                        .catch(error => {
+                            console.log(error);
+                            throw new Error(`Erro ao salvar uma nova Negociação: ${error}`);
+                        });
+    }
+
+    apagaTodas() {
+        return ConnectionFactory.getConnection()
+                        .then(connection => new NegociacaoIndexedDBDao(connection))
+                        .then(dao => dao.apagaTodos())
+                        .catch(error => {
+                            console.log(error);
+                            throw new Error(`Erro ao apagar todas as negociações: ${error}`)
+                        });
+    }
+
+    importa(negociacoesAtual) {
+        return this.getAll()
+                    .then(negociacoes => negociacoes.filter(negociacao =>
+                        !negociacoesAtual.some(negociacaoExistente => 
+                            JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
+                    .catch(error => {
+                        console.log(error);
+                        throw new Error(`Erro ao importar as negociações: ${error}`);
+                    });
+    }
+
     _fetchNegociacoes(endpoint, errorMessage) {
         return this._http.get(`negociacoes/${endpoint}`)
                         .then(negociacoes => negociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor)))
