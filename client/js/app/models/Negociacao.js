@@ -27,4 +27,8 @@ class Negociacao {
     getDataFormatada() {
        return Dates.format(this._data);
     }
+
+    equals(negociacao) {
+        return JSON.stringify(this) == JSON.stringify(negociacao);
+    }
 }

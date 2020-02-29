@@ -50,8 +50,7 @@ class NegociacaoService {
     importa(negociacoesAtual) {
         return this.getAll()
                     .then(negociacoes => negociacoes.filter(negociacao =>
-                        !negociacoesAtual.some(negociacaoExistente => 
-                            JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
+                        !negociacoesAtual.some(negociacaoExistente => negociacao.equals(negociacaoExistente))))
                     .catch(error => {
                         console.log(error);
                         throw new Error(`Erro ao importar as negociações: ${error}`);
