@@ -1,7 +1,7 @@
 /**
  * Representa um conjunto de negociações e manipula esse conjunto.
  */
-class Negociacoes {
+export class Negociacoes {
 
     constructor() {
         this._negociacoes = [];

@@ -1,7 +1,7 @@
 /**
  * Classe com métodos estáticos para manipulação de objetos Date
  */
-class Dates {
+export class Dates {
 
     constructor() {
         throw new Error("Esta classe não pode ser instaciada!"); 

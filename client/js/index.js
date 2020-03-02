@@ -1,29 +1,6 @@
-var campos = [
-    document.querySelector("#data"),
-    document.querySelector("#quantidade"),
-    document.querySelector("#valor")
-];
+import {NegociacaoController} from "./app/controllers/NegociacaoController";
 
-document.querySelector(".form").addEventListener("submit", function(event) {
-    event.preventDefault();
+let  negociacaoController = new NegociacaoController();
 
-    var tr = document.createElement("tr");
-    campos.forEach(function(campo) {
-        var td = document.createElement("td");
-        td.textContent = campo.value;
-        tr.appendChild(td);
-    });
-
-    var tdVolume = document.createElement("td");
-    tdVolume.textContent = campos[1].value * campos[2].value;
-    tr.appendChild(tdVolume);
-
-    var tbody = document.querySelector("table tbody");
-    tbody.appendChild(tr);
-
-    campos[0].value = "";
-    campos[1].value = 1;
-    campos[2].value = 0;
-
-    campos[0].focus();
-});
+document.querySelector(".form").addEventListener("onsubmit", negociacaoController.adiciona.bind(negociacaoController));
+document.querySelector("#apagar").addEventListener("onclick", negociacaoController.apaga.bind(negociacaoController));

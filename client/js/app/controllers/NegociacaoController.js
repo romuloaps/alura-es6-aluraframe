@@ -1,4 +1,9 @@
-class NegociacaoController {
+import {Dates, Mensagens} from "../helpers/index";
+import {Negociacao, Negociacoes} from "../models/index";
+import {NegociacaoService} from "../services/index";
+import {NegociacoesView, MensagemView, Bind} from "../views/index"; 
+
+export class NegociacaoController {
 
     constructor() {
         let $ = document.querySelector.bind(document);
@@ -75,9 +80,7 @@ class NegociacaoController {
     }
 
     _carregaNegociacoes() {
-        ConnectionFactory.getConnection()
-                        .then(connection => new NegociacaoIndexedDBDao(connection))
-                        .then(dao => dao.listaTodos())
+        this._negociacaoService.getAll()
                         .then(negociacoes => negociacoes.forEach(n => this._negociacoes.adiciona(n)));
     }
 }

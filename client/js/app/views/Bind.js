@@ -1,4 +1,6 @@
-class Bind {
+import {ProxyFactory} from "../services/index";
+
+export class Bind {
 
     /**
      * Retorna uma instância de Proxy

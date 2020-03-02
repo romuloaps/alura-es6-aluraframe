@@ -1,29 +1,42 @@
-class NegociacaoService {
+import {HttpService} from "./HttpService";
+import {Negociacao} from "../models/index";
+import {NegociacaoIndexedDBDao} from "../persistence/index";
+
+export class NegociacaoService {
 
     constructor() {
         this._http = new HttpService();
     }
 
-    getNegociacoesDaSemana() {
+    _getNegociacoesDaSemana() {
         return this._fetchNegociacoes("semana", "Erro ao obter negociações da semana");
     }
 
-    getNegociacoesDaSemanaAnterior() {
+    _getNegociacoesDaSemanaAnterior() {
         return this._fetchNegociacoes("anterior", "Erro ao obter negociações da semana anterior");
     }
 
-    getNegociacoesDaSemanaRetrasada() {
+    _getNegociacoesDaSemanaRetrasada() {
         return this._fetchNegociacoes("retrasada", "Erro ao obter negociações da semana retrasada");
     }
 
-    getAll() {
+    _fetchAll() {
         return Promise.all([
-            this.getNegociacoesDaSemana(),
-            this.getNegociacoesDaSemanaAnterior(),
-            this.getNegociacoesDaSemanaRetrasada()
+            this._getNegociacoesDaSemana(),
+            this._getNegociacoesDaSemanaAnterior(),
+            this._getNegociacoesDaSemanaRetrasada()
         ])
         .then(negociacoes => negociacoes.reduce((listaGeral, listaAtual) => listaGeral.concat(listaAtual), []))
         .catch(erro => {throw new Error(erro)});
+    }
+
+    _fetchNegociacoes(endpoint, errorMessage) {
+        return this._http.get(`negociacoes/${endpoint}`)
+                        .then(negociacoes => negociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor)))
+                        .catch(error => {
+                            console.log(error);
+                            throw new Error(errorMessage);
+                        });
     }
 
     salva(negociacao) {
@@ -48,7 +61,7 @@ class NegociacaoService {
     }
 
     importa(negociacoesAtual) {
-        return this.getAll()
+        return this._fetchAll()
                     .then(negociacoes => negociacoes.filter(negociacao =>
                         !negociacoesAtual.some(negociacaoExistente => negociacao.equals(negociacaoExistente))))
                     .catch(error => {
@@ -57,12 +70,9 @@ class NegociacaoService {
                     });
     }
 
-    _fetchNegociacoes(endpoint, errorMessage) {
-        return this._http.get(`negociacoes/${endpoint}`)
-                        .then(negociacoes => negociacoes.map(item => new Negociacao(new Date(item.data), item.quantidade, item.valor)))
-                        .catch(error => {
-                            console.log(error);
-                            throw new Error(errorMessage);
-                        });
+    getAll() {
+       return  ConnectionFactory.getConnection()
+                        .then(connection => new NegociacaoIndexedDBDao(connection))
+                        .then(dao => dao.listaTodos());
     }
 }

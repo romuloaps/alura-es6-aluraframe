@@ -1,4 +1,4 @@
-class NegociacaoIndexedDBDao {
+export class NegociacaoIndexedDBDao {
 
     constructor(connection) {
         this._connection = connection;

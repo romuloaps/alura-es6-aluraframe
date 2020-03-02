@@ -1,4 +1,4 @@
-class Mensagem {
+export class Mensagem {
 
     constructor(texto = "", tipo = "success") {
         this._texto = texto;
