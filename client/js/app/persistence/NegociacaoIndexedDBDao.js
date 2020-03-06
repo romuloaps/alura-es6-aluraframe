@@ -1,3 +1,5 @@
+import {Negociacao} from "../models/index";
+
 export class NegociacaoIndexedDBDao {
 
     constructor(connection) {

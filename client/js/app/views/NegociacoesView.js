@@ -1,3 +1,4 @@
+import {Dates} from "../helpers/index";
 import {View} from "./View";
 
 export class NegociacoesView extends View {

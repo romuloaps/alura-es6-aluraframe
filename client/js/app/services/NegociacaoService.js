@@ -1,6 +1,6 @@
 import {HttpService} from "./HttpService";
 import {Negociacao} from "../models/index";
-import {NegociacaoIndexedDBDao} from "../persistence/index";
+import {ConnectionFactory, NegociacaoIndexedDBDao} from "../persistence/index";
 
 export class NegociacaoService {
 

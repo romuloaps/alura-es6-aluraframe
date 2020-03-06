@@ -46,15 +46,15 @@
     <script>
         System.config({
             packages: {
-                "./build/js": {
+                "build/js": {
                     defaultExtension: "js"
                 },
-                "./node_modules": {
+                "node_modules": {
                     defaultExtension: "js"
                 }
             }
         });
-        System.import("build/js/index.js").catch(err => console.error(err));
+        System.import("build/js/index").catch(err => console.error(err));
     </script>
 </body>
 </html>
