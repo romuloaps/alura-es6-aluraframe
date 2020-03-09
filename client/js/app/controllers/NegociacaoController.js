@@ -3,7 +3,7 @@ import {Negociacao, Negociacoes} from "../models/index";
 import {NegociacaoService} from "../services/index";
 import {NegociacoesView, MensagemView, Bind} from "../views/index"; 
 
-export class NegociacaoController {
+class NegociacaoController {
 
     constructor() {
         let $ = document.querySelector.bind(document);
@@ -83,4 +83,9 @@ export class NegociacaoController {
         this._negociacaoService.getAll()
                         .then(negociacoes => negociacoes.forEach(n => this._negociacoes.adiciona(n)));
     }
+}
+
+let negociacaoController = new NegociacaoController();
+export function currentInstance() {
+    return negociacaoController;
 }
