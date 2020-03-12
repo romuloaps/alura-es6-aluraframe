@@ -45,12 +45,64 @@
     <script src="node_modules/systemjs/dist/system.js"></script>
     <script>
         System.config({
+            paths: {
+                // paths serve as alias
+                'npm:': 'node_modules/'
+            },
+            map: {
+                "@babel": "npm:@babel",
+                "core-js-pure": "npm:core-js-pure"
+            },
             packages: {
                 "build/js": {
                     defaultExtension: "js"
                 },
-                "node_modules": {
+                "@babel": {
                     defaultExtension: "js"
+                },
+                "core-js-pure/stable/instance": {
+                    defaultExtension: "js",
+                    main: "bind"
+                },
+                "core-js-pure/es/instance": {
+                    defaultExtension: "js",
+                    main: "bind"
+                },
+                "core-js-pure/stable/promise": {
+                    defaultExtension: "js",
+                    main: "index"
+                },
+                "core-js-pure/symbol": {
+                    defaultExtension: "js",
+                    main: "index"
+                },
+                "core-js-pure/features/symbol": {
+                    defaultExtension: "js",
+                    main: "index"
+                },
+                "core-js-pure/es/promise": {
+                    defaultExtension: "js",
+                    main: "index"
+                },
+                "core-js-pure/es/symbol": {
+                    defaultExtension: "js",
+                    main: "index"
+                },
+                
+                "core-js-pure/stable": {
+                    defaultExtension: "js",
+                },
+                "core-js-pure/es": {
+                    defaultExtension: "js",
+                },
+                "core-js-pure/modules": {
+                    defaultExtension: "js",
+                },
+                "core-js-pure/internals": {
+                    defaultExtension: "js",
+                },
+                "core-js-pure/features": {
+                    defaultExtension: "js",
                 }
             }
         });
